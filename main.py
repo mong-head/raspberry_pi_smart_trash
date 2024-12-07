@@ -14,7 +14,7 @@ def main():
         # Initialize
         camera = Camera(camera_index)
         switch = Switch(GPIO_CONSTANT.PUSH_BUTTON)
-        servoMotor = Servo(GPIO_CONSTANT.SERVO_MORTOR)
+        servoMotor = Servo(pin = GPIO_CONSTANT.SERVO_MORTOR, start_angle=90, end_angle=90)
         irSensor = IRSensor(GPIO_CONSTANT.IR_SENSOR)
 
         print("Press the switch to capture an image. Press Ctrl+C to exit.")

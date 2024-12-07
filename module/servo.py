@@ -22,7 +22,7 @@ class Servo:
         self.freq = freq
         self.start_angle = start_angle
         self.end_angle = end_angle
-        self.current_angle = self.start_angle
+        self.current_angle = -1
         self.pi = pigpio.pi()
 
         # Set up GPIO mode
@@ -31,6 +31,7 @@ class Servo:
 
         # Set up PWM with the specified frequency
         self.pi.set_PWM_frequency(self.pin, self.freq)
+        self.move_to_angle(self.start_angle);
         # self.pwm = GPIO.PWM(self.pin, self.freq)
         # self.pwm.start(self.start_angle)  # Start PWM with 0% duty cycle (servo at 0 degrees)
     def angle_to_duty_cycle(self, angle):
@@ -45,7 +46,12 @@ class Servo:
         return (angle / 18) + 2
     
     def angle_to_pig_piod_angle(self, angle):
-        return 11.11 * angle + 500
+        pig_piod_angle = 11.11 * (angle - 4) + 500
+        if pig_piod_angle > 2500 :
+            return 2500
+        if pig_piod_angle < 500 : 
+            return 500
+        return pig_piod_angle
 
     def move_to_angle(self, angle):
         if angle == self.current_angle:
