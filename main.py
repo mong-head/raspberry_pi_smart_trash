@@ -1,5 +1,6 @@
 # main.py
 from modules import Camera, Switch, Servo, IRSensor
+from classifiers import GarbageClassifier
 from config import GPIO_CONSTANT
 import time
 
@@ -16,6 +17,7 @@ def main():
         switch = Switch(GPIO_CONSTANT.PUSH_BUTTON)
         servoMotor = Servo(pin = GPIO_CONSTANT.SERVO_MORTOR, start_angle=90, end_angle=90)
         irSensor = IRSensor(GPIO_CONSTANT.IR_SENSOR)
+        garbageClassifier = GarbageClassifier()
 
         print("Press the switch to capture an image. Press Ctrl+C to exit.")
 
@@ -26,7 +28,11 @@ def main():
                 frame = camera.capture_frame()
 
                 if frame is not None:
-                    camera.save_image(frame, filename='/home/user/Pictures/capture.jpg')
+                    imagePath = '/home/user/Pictures/capture.jpg'
+                    camera.save_image(frame, filename=imagePath)
+                    garbageClassResult = garbageClassifier.classify_garbage(imagePath)
+                    print("Classified:", garbageClassResult["class"])
+                    print("Probability:", garbageClassResult["probability"])
                 else:
                     print("No frame captured.")
             if irSensor.is_detected():
