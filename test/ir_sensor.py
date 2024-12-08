@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from module import IRSensor
+from modules import IRSensor
 from config import GPIO_CONSTANT
 
 def test_ir_receiver():

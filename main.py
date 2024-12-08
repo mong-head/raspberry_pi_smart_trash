@@ -1,5 +1,5 @@
 # main.py
-from module import Camera, Switch, Servo, IRSensor
+from modules import Camera, Switch, Servo, IRSensor
 from config import GPIO_CONSTANT
 import time
 
