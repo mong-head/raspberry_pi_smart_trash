@@ -36,9 +36,9 @@ def main():
                 else:
                     print("No frame captured.")
             if irSensor.is_detected():
-                servoMotor.move_to_angle(180)
+                servoMotor.move_to_angle(120)
             else:
-                servoMotor.move_to_angle(0)
+                servoMotor.move_to_angle(60)
             time.sleep(0.1)  # Small delay to prevent CPU overload
 
     except KeyboardInterrupt:
