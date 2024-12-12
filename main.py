@@ -3,14 +3,14 @@ from modules import Camera, Switch, Servo, IRSensor, LCD
 from classifiers import GarbageClassifier
 from config import GPIO_CONSTANT
 import time
+import cv2
 
 def main():
     # GPIO setup
     camera_index = 0  # Index for the USB camera
     
-    # parameter
-    
-
+    #parameter
+    is_detected = False
     try:
         # Initialize
         camera = Camera(camera_index)
@@ -24,23 +24,29 @@ def main():
 
         while True:
             # Check if the switch is pressed
-            if switch.is_pressed():
-                print("Switch pressed. Capturing image...")
+            if irSensor.is_detected() or switch.is_pressed():
                 frame = camera.capture_frame()
-
+                is_detected = True
                 if frame is not None:
+                    cv2.imshow('USB Camera', frame)
                     imagePath = '/home/user/Pictures/capture.jpg'
                     camera.save_image(frame, filename=imagePath)
                     garbageClassResult = garbageClassifier.classify_garbage(imagePath)
                     print("Classified:", garbageClassResult["class"])
                     print("Probability:", garbageClassResult["probability"])
                     lcd.display_text(text=garbageClassResult["class"], line=0)
+                    if garbageClassResult["class"] in ['cardboard', 'glass', 'metal', 'plastic'] :
+                        servoMotor.move_to_angle(150)
+                    else : 
+                        servoMotor.move_to_angle(30)
                 else:
                     print("No frame captured.")
-            if irSensor.is_detected():
-                servoMotor.move_to_angle(120)
             else:
-                servoMotor.move_to_angle(60)
+                if is_detected == True :
+                    servoMotor.move_to_angle(90)
+                    lcd.clear()
+                    cv2.destroyAllWindows()
+                    is_detected = False
             time.sleep(0.1)  # Small delay to prevent CPU overload
 
     except KeyboardInterrupt:
@@ -59,6 +65,8 @@ def main():
             servoMotor.cleanup()
         if 'irSensor' in locals():
             irSensor.cleanup()
+        if 'lcd' in locals():
+            lcd.cleanup()
 
 if __name__ == "__main__":
     main()
