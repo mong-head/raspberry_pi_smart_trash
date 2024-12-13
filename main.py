@@ -25,6 +25,7 @@ def main():
         while True:
             # Check if the switch is pressed
             if irSensor.is_detected() or switch.is_pressed():
+                time.sleep(1)
                 frame = camera.capture_frame()
                 is_detected = True
                 if frame is not None:
@@ -47,7 +48,7 @@ def main():
                     lcd.clear()
                     cv2.destroyAllWindows()
                     is_detected = False
-            time.sleep(0.1)  # Small delay to prevent CPU overload
+            time.sleep(1)  # Small delay to prevent CPU overload
 
     except KeyboardInterrupt:
         print("Program terminated by user.")

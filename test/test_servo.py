@@ -9,12 +9,12 @@ from config import GPIO_CONSTANT
 
 def test_servo():
     # Set up servo on GPIO pin 
-    servo = Servo(pin=GPIO_CONSTANT.SERVO_MORTOR, start_angle=0, end_angle=0)
+    servo = Servo(pin=GPIO_CONSTANT.SERVO_MORTOR, start_angle=90, end_angle=90, min_angle=10, max_angle=170)
 
     try:
         # Move servo to 0 degrees
         print("Moving servo to 0 degrees...")
-        servo.move_to_angle(0)
+        servo.move_to_angle(10)
         time.sleep(1)
 
         # Move servo to 90 degrees
@@ -24,7 +24,7 @@ def test_servo():
 
         # Move servo to 180 degrees
         print("Moving servo to 180 degrees...")
-        servo.move_to_angle(180)
+        servo.move_to_angle(170)
         time.sleep(1)
 
         # Sweep the servo
