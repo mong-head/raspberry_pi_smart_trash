@@ -1,6 +1,9 @@
 import tflite_runtime.interpreter as tflite
 from PIL import Image
+import cv2
 import numpy as np
+import matplotlib.pyplot as plt
+import time
 
 class Classifier:
     """
@@ -29,9 +32,15 @@ class Classifier:
         Returns:
             numpy.ndarray: Preprocessed image as a numpy array.
         """
-        img = Image.open(image_path).convert('RGB')
-        img = img.resize(target_size, Image.ANTIALIAS)
-        img_array = np.array(img, dtype=np.uint8) / 255.0  # Normalize to [0, 1]
+        img = cv2.imread(image_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, target_size, interpolation=cv2.INTER_AREA)
+        plt.imshow(img)
+        plt.axis('off')
+        plt.show()
+        # time.sleep(1)
+        plt.close('all')
+        img_array = np.array(img, dtype=np.uint8)  # Normalize to [0, 1]
         return img_array[np.newaxis, ...].astype(np.float32)
 
     def predict(self, image_path, target_size):

@@ -4,6 +4,7 @@ from classifiers import GarbageClassifier
 from config import GPIO_CONSTANT
 import time
 import cv2
+import matplotlib.pyplot as plt
 
 def main():
     # GPIO setup
@@ -19,19 +20,21 @@ def main():
         irSensor = IRSensor(GPIO_CONSTANT.IR_SENSOR)
         lcd = LCD(rs=GPIO_CONSTANT.LCD_RS, e=GPIO_CONSTANT.LCD_E, d4=GPIO_CONSTANT.LCD_D4, d5=GPIO_CONSTANT.LCD_D5, d6=GPIO_CONSTANT.LCD_D6, d7=GPIO_CONSTANT.LCD_D7)
         garbageClassifier = GarbageClassifier()
-
+        lcd.display_text(text="202470034", line=0)
         print("Press the switch to capture an image. Press Ctrl+C to exit.")
 
         while True:
             # Check if the switch is pressed
-            if irSensor.is_detected() or switch.is_pressed():
+            if is_detected == False and (irSensor.is_detected() or switch.is_pressed()):
                 time.sleep(1)
                 frame = camera.capture_frame()
                 is_detected = True
                 if frame is not None:
-                    cv2.imshow('USB Camera', frame)
+                    lcd.clear()
+                    x, y, w, h = 250, 200, 650, 300 
+                    processed_frame = camera.crop_and_resize_with_padding(frame, x, y, w, h, output_size=(224, 224))
                     imagePath = '/home/user/Pictures/capture.jpg'
-                    camera.save_image(frame, filename=imagePath)
+                    camera.save_image(processed_frame, filename=imagePath)
                     garbageClassResult = garbageClassifier.classify_garbage(imagePath)
                     print("Classified:", garbageClassResult["class"])
                     print("Probability:", garbageClassResult["probability"])

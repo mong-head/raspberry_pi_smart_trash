@@ -9,11 +9,12 @@ Specialized classifier for garbage classification tasks.
 class GarbageClassifier(Classifier):
    
     def __init__(self):
-        self.model_path = "/home/user/project/models/garbage_classifcation_model.tflite"
-        self.class_names = ['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']
+        train_gen_label_map = {0: 'cardboard', 1: 'glass', 2: 'metal', 3: 'paper', 4: 'plastic', 5: 'trash'}
+        self.model_path = "/home/user/project/models/garbage_classifiaction_mobilenetv2.tflite"
+        self.class_names = [train_gen_label_map[key] for key in sorted(train_gen_label_map.keys())]
         super().__init__(self.model_path)
 
-    def classify_garbage(self, image_path, target_size=(32, 32)):
+    def classify_garbage(self, image_path, target_size=(224, 224)):
         """
         Classify the type of garbage in the given image.
 
